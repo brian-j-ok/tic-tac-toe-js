@@ -1,3 +1,5 @@
+let won = false;
+
 // Player Factory
 const Player = (name) => {
   const moveArray = [];
@@ -13,6 +15,7 @@ const displayController = (() => {
 
   grid_array.forEach((div) => {
     div.addEventListener("click", function () {
+      if (won) return
       if (this.innerHTML != '') return
 
       this.innerHTML = game.play(this.getAttribute("data-index"));
@@ -39,8 +42,6 @@ const game = (() => {
 
   const player1 = Player('Brian');
   const player2 = Player('Meg');
-
-  let won = false;
 
   const turn_display = document.getElementById('turn-display');
   turn_display.innerHTML = player1.getName() + "'s turn";
