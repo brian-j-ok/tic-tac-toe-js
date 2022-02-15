@@ -22,7 +22,7 @@ const displayController = (() => {
     div.addEventListener("click", function () {
       if (this.innerHTML != '') return
 
-      this.innerHTML = "X";
+      this.innerHTML = game.play();
     });
   });
 
@@ -36,7 +36,20 @@ const game = (() => {
   const player1 = Player('Brian');
   const player2 = Player('Meg');
 
-  return {player1, player2};
+  const turn_display = document.getElementById('turn-display');
+  turn_display.innerHTML = player1.getName();
+
+  const play = () => {
+    if (turn_display.innerHTML == player1.getName()) {
+      turn_display.innerHTML = player2.getName();
+      return "X"
+    } else {
+      turn_display.innerHTML = player1.getName();
+      return "O"
+    }
+  };
+
+  return {player1, player2, play};
 })();
 
 console.log(game.player1.getName());
