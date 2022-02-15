@@ -14,5 +14,11 @@ const Player = (name) => {
   return {getName};
 };
 
-const player1 = Player('brian');
-console.log(player1.getName());
+// Display Controlller Module
+const displayController = (() => {
+  const gameboard = document.getElementById('gameboard');
+
+  return {
+
+  };
+}) ();
