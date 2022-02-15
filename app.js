@@ -28,7 +28,7 @@ const game = (() => {
   let player2 = Player('Bot');
 
   const turn_display = document.getElementById('turn-display');
-  turn_display.innerHTML = player1.getName() + "'s turn";
+  turn_display.innerHTML = "Hit Start Game to Begin!";
 
   const play = (index) => {
     if (turn_display.innerHTML.split("'")[0] == player1.getName()) {
@@ -70,12 +70,13 @@ const game = (() => {
   const start = () => {
     const player1name = document.getElementById("player1name").value;
     const player2name = document.getElementById("player2name").value;
-    if (player1name != null) { player1 = Player(player1name); }
-    if (player2name != null) { player2 = Player(player2name); }
+    if (player1name != "") { player1 = Player(player1name); }
+    if (player2name != "") { player2 = Player(player2name); }
+    turn_display.innerHTML = player1.getName() + "'s turn";
   }
 
   const reset = () => {
-    turn_display.innerHTML = "Game Reset!"
+    turn_display.innerHTML = player1.getName() + "'s turn.\nGame Reset!"
     player1.moveArray = [];
     player2.moveArray = [];
     game_over = false;
@@ -91,6 +92,9 @@ const displayController = (() => {
   const start_button = document.getElementById("start");
   const reset_button = document.getElementById("reset");
 
+  const player1wins = document.getElementById("player1wins");
+  const player2wins = document.getElementById("player2wins");
+
   grid_array.forEach((div) => {
     div.addEventListener("click", function () {
       if (game_over) return
@@ -98,11 +102,13 @@ const displayController = (() => {
 
       this.innerHTML = game.play(this.getAttribute("data-index"));
       game.tie();
+      if (game_over) { updateWins() };
     });
   });
 
   start_button.addEventListener("click", function () {
     game.start();
+    updateWins();
     game_over = false;
   });
 
@@ -113,7 +119,8 @@ const displayController = (() => {
     })
   })
 
-  return {
-    
-  };
+  const updateWins = () => {
+    player1wins.innerHTML = game.player1.getName() + "'s Wins: " + game.player1.winCount;
+    player2wins.innerHTML = game.player2.getName() + "'s Wins: " + game.player2.winCount;
+  }
 })();
