@@ -1,4 +1,4 @@
-let won = false;
+let game_over = false;
 
 // Player Factory
 const Player = (name) => {
@@ -15,10 +15,11 @@ const displayController = (() => {
 
   grid_array.forEach((div) => {
     div.addEventListener("click", function () {
-      if (won) return
+      if (game_over) return
       if (this.innerHTML != '') return
 
       this.innerHTML = game.play(this.getAttribute("data-index"));
+      game.tie();
     });
   });
 
@@ -61,15 +62,26 @@ const game = (() => {
   };
 
   const victory = (player) => {
-    won = false;
+    let won = false;
     for (let combo of winning_moves) {
       won = combo.every(move => {
         return player.moveArray.includes(move);
       });
-      if (won) {break};
+      if (won) {
+        game_over = true;
+        break;
+      };
     }
     return won;
   }
 
-  return {player1, player2, play, won};
+  const tie = () => {
+    let play_count = player1.moveArray.length + player2.moveArray.length;
+    if (play_count == 9) {
+      game_over = true;
+      turn_display.innerHTML = "Tie!";
+    }
+  }
+
+  return {player1, player2, play, tie};
 })();
