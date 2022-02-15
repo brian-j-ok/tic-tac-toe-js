@@ -1,17 +1,10 @@
-// Gameboard Module
-const gameBoard = (() => {
-  const board_array = [];
-
-  return {
-    board_array,
-  };
-})();
-
 // Player Factory
 const Player = (name) => {
+  const moveArray = [];
+
   const getName = () => name;
 
-  return {getName};
+  return {getName, moveArray};
 };
 
 // Display Controller Module
@@ -22,7 +15,7 @@ const displayController = (() => {
     div.addEventListener("click", function () {
       if (this.innerHTML != '') return
 
-      this.innerHTML = game.play();
+      this.innerHTML = game.play(this.getAttribute("data-index"));
     });
   });
 
@@ -33,24 +26,49 @@ const displayController = (() => {
 
 // Game Module
 const game = (() => {
+  const winning_moves = [
+    ["1", "2", "3"],
+    ["4", "5", "6"],
+    ["7", "8", "9"],
+    ["1", "4", "7"],
+    ["2", "5", "8"],
+    ["3", "6", "9"],
+    ["1", "5", "9"],
+    ["3", "5", "7"],
+  ];
+
   const player1 = Player('Brian');
   const player2 = Player('Meg');
 
-  const turn_display = document.getElementById('turn-display');
-  turn_display.innerHTML = player1.getName();
+  let won = false;
 
-  const play = () => {
-    if (turn_display.innerHTML == player1.getName()) {
-      turn_display.innerHTML = player2.getName();
+  const turn_display = document.getElementById('turn-display');
+  turn_display.innerHTML = player1.getName() + "'s turn";
+
+  const play = (index) => {
+    if (turn_display.innerHTML.split("'")[0] == player1.getName()) {
+      player1.moveArray.push(index);
+      turn_display.innerHTML = player2.getName() + "'s turn";
+      if (victory(player1)) {turn_display.innerHTML = player1.getName() + " Won!!!"};
       return "X"
     } else {
-      turn_display.innerHTML = player1.getName();
+      player2.moveArray.push(index);
+      turn_display.innerHTML = player1.getName() + "'s turn";
+      if (victory(player2)) {turn_display.innerHTML = player2.getName() + " Won!!!"};
       return "O"
     }
   };
 
-  return {player1, player2, play};
-})();
+  const victory = (player) => {
+    won = false;
+    for (let combo of winning_moves) {
+      won = combo.every(move => {
+        return player.moveArray.includes(move);
+      });
+      if (won) {break};
+    }
+    return won;
+  }
 
-console.log(game.player1.getName());
-console.log(game.player2.getName());
+  return {player1, player2, play, won};
+})();
