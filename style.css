@@ -3,16 +3,32 @@
   padding: 0px;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-container {
+  margin: 5vh 10vw;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 50px;
+}
+
 .gameboard {
   display: grid;
-  grid-template-columns: repeat(3, 30px);
-  grid-template-rows: repeat(3, 30px);
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
   gap: 5px;
 }
 
 .grid {
-  height: 30px;
-  width: 30px;
+  height: 100px;
+  width: 100px;
   background-color: grey;
   border: 2px solid black;
+  text-align: center;
+
+  font-size: 6em;
 }
