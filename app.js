@@ -27,6 +27,9 @@ const game = (() => {
   let player1 = Player('Player 1');
   let player2 = Player('Bot');
 
+  const player1wins = document.getElementById("player1wins");
+  const player2wins = document.getElementById("player2wins");
+
   const turn_display = document.getElementById('turn-display');
   turn_display.innerHTML = "Hit Start Game to Begin!";
 
@@ -52,6 +55,7 @@ const game = (() => {
       });
       if (won) {
         player.winCount += 1;
+        updateWins();
         game_over = true;
         break;
       };
@@ -72,6 +76,7 @@ const game = (() => {
     const player2name = document.getElementById("player2name").value;
     if (player1name != "") { player1 = Player(player1name); }
     if (player2name != "") { player2 = Player(player2name); }
+    updateWins();
     turn_display.innerHTML = player1.getName() + "'s turn";
   }
 
@@ -82,7 +87,12 @@ const game = (() => {
     game_over = false;
   }
 
-  return {player1, player2, play, tie, start, reset};
+  const updateWins = () => {
+    player1wins.innerHTML = player1.getName() + "'s Wins: " + game.player1.winCount;
+    player2wins.innerHTML = player2.getName() + "'s Wins: " + game.player2.winCount;
+  };
+
+  return {player1, player2, play, tie, start, reset, updateWins};
 })();
 
 // Display Controller Module
@@ -92,9 +102,6 @@ const displayController = (() => {
   const start_button = document.getElementById("start");
   const reset_button = document.getElementById("reset");
 
-  const player1wins = document.getElementById("player1wins");
-  const player2wins = document.getElementById("player2wins");
-
   grid_array.forEach((div) => {
     div.addEventListener("click", function () {
       if (game_over) return
@@ -102,13 +109,12 @@ const displayController = (() => {
 
       this.innerHTML = game.play(this.getAttribute("data-index"));
       game.tie();
-      if (game_over) { updateWins() };
+      if (game_over) { game.updateWins() };
     });
   });
 
   start_button.addEventListener("click", function () {
     game.start();
-    updateWins();
     game_over = false;
   });
 
@@ -118,9 +124,4 @@ const displayController = (() => {
       div.innerHTML = '';
     })
   })
-
-  const updateWins = () => {
-    player1wins.innerHTML = game.player1.getName() + "'s Wins: " + game.player1.winCount;
-    player2wins.innerHTML = game.player2.getName() + "'s Wins: " + game.player2.winCount;
-  }
 })();
